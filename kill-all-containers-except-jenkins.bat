@@ -14,9 +14,10 @@ GOTO:MAIN
     SETLOCAL ENABLEDELAYEDEXPANSION
         SET applicationName=%~1
         SET applicationContainerId="docker ps -aqf name=^%applicationName%"
-		FOR /f "tokens=*" %%i IN ('docker ps -aq') DO (
+		FOR /f "tokens=*" %%i IN ('docker ps -a') DO (
 			IF NOT "%%i"=="%applicationContainerId%" (
-				docker rm %%i
+				docker container stop %%i
+				docker container rm %%i
 			)
 		)
     ENDLOCAL
@@ -30,5 +31,7 @@ EXIT /B 0
 
 
 :MAIN
+
 call:retainContainer "jenkins"
-pause
+
+PAUSE
